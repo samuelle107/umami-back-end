@@ -26,6 +26,7 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use('/recipes', routes.recipes);
+app.use('/tags', routes.tags);
 
 app.listen(process.env.PORT, () => {
   console.log(`The server has started on port: ${process.env.PORT}`);
