@@ -7,14 +7,14 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const cuisine = await CuisineTag.find({});
-    const dietaryPreference = await DietaryPreferenceTag.find({});
-    const meal = await MealTag.find({});
+    const cuisineTags = await CuisineTag.find({});
+    const dietaryPreferenceTags = await DietaryPreferenceTag.find({});
+    const mealTags = await MealTag.find({});
 
     res.send({
-      cuisine,
-      dietaryPreference,
-      meal,
+      cuisineTags,
+      dietaryPreferenceTags,
+      mealTags,
     });
   } catch (error) {
     res.status(404).send(error);
