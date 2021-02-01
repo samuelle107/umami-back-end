@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
   try {
     tags = {
       cuisine,
-      dietaryPreferences: [dietaryPreferences].flat(),
+      dietaryPreferences: [dietaryPreferences].flat().filter((item) => item),
       meal,
     };
 
