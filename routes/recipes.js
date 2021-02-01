@@ -7,9 +7,35 @@ const MealTag = require('../models/meal-tags');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  try {
-    const recipes = await Recipe.find({}).sort({ date: -1 });
+  let tags = {};
+  const { cuisine, dietaryPreferences, meal } = req.query;
 
+  try {
+    tags = {
+      cuisine,
+      dietaryPreferences: [dietaryPreferences].flat(),
+      meal,
+    };
+
+    Object.keys(tags).forEach(
+      (key) => tags[key] === undefined && delete tags[key],
+    );
+  } catch (error) {
+    console.log(error);
+  }
+
+  try {
+    const filter = {
+      'tags.cuisine': tags.cuisine,
+      'tags.meal': tags.meal,
+      'tags.dietaryPreferences': tags.dietaryPreferences.length > 0 ? { $in: tags.dietaryPreferences } : undefined,
+    };
+    Object.keys(filter).forEach(
+      (key) => filter[key] === undefined && delete filter[key],
+    );
+    const recipes = await Recipe
+      .find(filter)
+      .sort({ date: -1 });
     res.send(recipes);
   } catch (error) {
     res.status(404).send(error);
@@ -45,10 +71,12 @@ router.post('/', async (req, res) => {
 
     await addTagToDatabase(cuisine, CuisineTag);
     await addTagToDatabase(meal, MealTag);
-    await Promise.allSettled(dietaryPreferences.map((dietaryPreference) => addTagToDatabase(
-      dietaryPreference,
-      DietaryPreferenceTag,
-    )));
+    await Promise.allSettled(
+      dietaryPreferences.map((dietaryPreference) => addTagToDatabase(
+        dietaryPreference,
+        DietaryPreferenceTag,
+      )),
+    );
 
     res.send({ id: recipe.id });
   } catch (error) {
