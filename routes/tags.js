@@ -7,9 +7,9 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const cuisineTags = await CuisineTag.find({});
-    const dietaryPreferenceTags = await DietaryPreferenceTag.find({});
-    const mealTags = await MealTag.find({});
+    const cuisineTags = await CuisineTag.find({}).sort({ tag: 1 });
+    const dietaryPreferenceTags = await DietaryPreferenceTag.find({}).sort({ tag: 1 });
+    const mealTags = await MealTag.find({}).sort({ tag: 1 });
 
     res.send({
       cuisineTags,
